@@ -5,6 +5,7 @@
 
 # flask python
 *.venv/
+*venv
 *__pycache__/
 *flask_session/
 
