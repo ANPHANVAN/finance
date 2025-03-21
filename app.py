@@ -59,11 +59,7 @@ def buy():
         symbol = request.form.get("symbol")
         shares = request.form.get("shares")
         shares = int(shares)
-
-        # type wrong symbol => out
-        if lookup(symbol) == None:
-            return apology("Invalid Symbol")
-        
+   
         # your cash = 0 => out
         cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])
         if cash:
@@ -71,8 +67,13 @@ def buy():
         else:
             return apology("you dont have enough cash")
 
-        stock = yf.Ticker(symbol)
-        price = stock.info.get('currentPrice', 'N/A')
+        try:
+            stock = yf.Ticker(symbol)
+            price = stock.info.get('currentPrice', 'N/A')
+        except:
+            return apology("Invalid Symbol")
+        
+        
         total = price * shares
         if price * shares > cash:
             # transaction > cash => error
